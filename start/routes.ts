@@ -17,8 +17,8 @@ router
 
     router
       .group(() => {
-        router.put('/:id', [ProfilesController, 'update'])
-        router.get('/:id', [ProfilesController, 'show'])
+        router.put('', [ProfilesController, 'update'])
+        router.get('', [ProfilesController, 'show'])
         router.get('activities', [ProfilesController, 'activities'])
       })
       .prefix('profiles')
