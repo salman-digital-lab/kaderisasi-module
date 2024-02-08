@@ -14,11 +14,6 @@ router
         router.post('forgot-password', [AuthController, 'sendPasswordRecovery'])
       })
       .prefix('auth')
-      .use(
-        middleware.auth({
-          guards: ['api'],
-        })
-      )
 
     router
       .group(() => {
@@ -35,7 +30,11 @@ router
 
     router
       .group(() => {
-        router.post('register/:id', [ActivitiesController, 'register'])
+        router.post('register/:id', [ActivitiesController, 'register']).use(
+          middleware.auth({
+            guards: ['api'],
+          })
+        )
         router.get('/:slug', [ActivitiesController, 'show'])
         router.get('', [ActivitiesController, 'index'])
       })
