@@ -1,9 +1,7 @@
 import { DateTime } from 'luxon'
-import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 
-export default class AdminUser extends compose(BaseModel, AuthFinder) {
+export default class AdminUser extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 

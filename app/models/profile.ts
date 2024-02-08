@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, hasOne, belongsTo } from '@adonisjs/lucid/orm'
-import type { BelongsTo, HasOne } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
+import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import Province from '#models/province'
 import PublicUser from '#models/public_user'
 import City from '#models/city'
@@ -13,10 +13,10 @@ export default class Profile extends BaseModel {
   @column()
   declare userId: number
 
-  @hasOne(() => PublicUser, {
+  @belongsTo(() => PublicUser, {
     localKey: 'userId',
   })
-  declare publicUser: HasOne<typeof PublicUser>
+  declare publicUser: BelongsTo<typeof PublicUser>
 
   @column()
   declare name: string

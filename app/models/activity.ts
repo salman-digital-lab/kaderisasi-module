@@ -14,22 +14,22 @@ export default class Activity extends BaseModel {
   @column()
   declare description: string
 
-  @column.dateTime()
+  @column.date()
   declare activityStart: DateTime
 
-  @column.dateTime()
+  @column.date()
   declare activityEnd: DateTime
 
-  @column.dateTime()
+  @column.date()
   declare registrationStart: DateTime
 
-  @column.dateTime()
+  @column.date()
   declare registrationEnd: DateTime
 
-  @column.dateTime()
+  @column.date()
   declare selectionStart: DateTime
 
-  @column.dateTime()
+  @column.date()
   declare selectionEnd: DateTime
 
   @column()
