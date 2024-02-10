@@ -4,11 +4,6 @@ import { defineConfig, targets } from '@adonisjs/core/logger'
 
 const loggerConfig = defineConfig({
   default: 'app',
-
-  /**
-   * The loggers object can be used to define multiple loggers.
-   * By default, we configure only one logger (named "app").
-   */
   loggers: {
     app: {
       enabled: true,

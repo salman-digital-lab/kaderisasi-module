@@ -52,8 +52,6 @@ export default class ActivitiesController {
       const user = auth.getUserOrFail()
       const data = await activityRegistrationValidator.validate(request.all())
 
-      // must create validation for questionnaire answer
-
       const registration = await ActivityRegistration.create({
         userId: user.id,
         activityId: activityId,
@@ -62,7 +60,7 @@ export default class ActivitiesController {
       })
 
       return response.ok({
-        message: 'UPDATE_DATA_SUCCESS',
+        message: 'ACTIVITY_REGISTER_SUCCESS',
         data: registration,
       })
     } catch (error) {

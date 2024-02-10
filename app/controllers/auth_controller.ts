@@ -6,7 +6,8 @@ import PublicUser from '#models/public_user'
 import Profile from '#models/profile'
 
 export default class AuthController {
-  async register({ request, response }: HttpContext) {
+  async register({ request, response, logger }: HttpContext) {
+    logger.info(this.info(request.ip(), request.method(), request.url()))
     try {
       const payload = await registerValidator.validate(request.all())
 
@@ -28,9 +29,10 @@ export default class AuthController {
         })
       })
     } catch (error) {
+      this.logError()
       return response.internalServerError({
         message: 'GENERAL_ERROR',
-        error: error.stack,
+        error: error.message,
       })
     }
   }
@@ -85,4 +87,16 @@ export default class AuthController {
       })
     }
   }
+  
+  info(ip: string, method: string, url: string): string {
+    const datetime = new Date().toLocaleString()
+    const logData = datetime + '-' + ip + '-' + method + '-' + url
+    return logData
+  }
+
+  logError(status:string, message:string): string {
+    const errorData = 'status: 'status + '// ' + 'message'+ message
+    return errorData
+  }
+
 }
