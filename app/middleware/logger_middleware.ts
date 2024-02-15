@@ -15,9 +15,9 @@ export default class {
         ' | URL: ' +
         request.url() +
         ' | Response Status: ' +
-        response.status +
+        JSON.stringify(response.getStatus()) +
         ' | Response body: ' +
-        response.getBody()
+        JSON.stringify(response.getBody())
     )
   }
 }
