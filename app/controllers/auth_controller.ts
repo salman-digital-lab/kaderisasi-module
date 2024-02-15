@@ -7,9 +7,15 @@ import Profile from '#models/profile'
 
 export default class AuthController {
   async register({ request, response, logger }: HttpContext) {
-    logger.info(this.info(request.ip(), request.method(), request.url()))
     try {
       const payload = await registerValidator.validate(request.all())
+      const exist = await PublicUser.findBy('email', payload.email)
+
+      if (exist) {
+        return response.conflict({
+          message: 'EMAIL_ALREADY_REGISTERED',
+        })
+      }
 
       await database.transaction(async (trx) => {
         const user = new PublicUser()
@@ -29,7 +35,7 @@ export default class AuthController {
         })
       })
     } catch (error) {
-      this.logError()
+      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -37,7 +43,7 @@ export default class AuthController {
     }
   }
 
-  async login({ request, response }: HttpContext) {
+  async login({ request, response, logger }: HttpContext) {
     try {
       const payload = await loginValidator.validate(request.all())
       const email: string = payload.email
@@ -58,6 +64,7 @@ export default class AuthController {
         data: { user, data, token },
       })
     } catch (error) {
+      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -65,7 +72,7 @@ export default class AuthController {
     }
   }
 
-  async sendPasswordRecovery({ request, response }: HttpContext) {
+  async sendPasswordRecovery({ request, response, logger }: HttpContext) {
     try {
       const email: string = request.all().email
       const user = await PublicUser.findBy('email', email)
@@ -81,22 +88,16 @@ export default class AuthController {
         message: 'SEND_EMAIL_SUCCESS',
       })
     } catch (error) {
+      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
       })
     }
   }
-  
-  info(ip: string, method: string, url: string): string {
-    const datetime = new Date().toLocaleString()
-    const logData = datetime + '-' + ip + '-' + method + '-' + url
-    return logData
-  }
 
-  logError(status:string, message:string): string {
-    const errorData = 'status: 'status + '// ' + 'message'+ message
+  logError(status: string, message: string): string {
+    const errorData = 'status: ' + status + '// ' + 'message' + message
     return errorData
   }
-
 }

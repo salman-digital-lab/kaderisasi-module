@@ -4,7 +4,7 @@ import { activityRegistrationValidator } from '#validators/activity_validator'
 import ActivityRegistration from '#models/activity_registration'
 
 export default class ActivitiesController {
-  async index({ request, response }: HttpContext) {
+  async index({ request, response, logger }: HttpContext) {
     try {
       const page = request.qs().page ?? 1
       const perPage = request.qs().per_page ?? 10
@@ -22,6 +22,7 @@ export default class ActivitiesController {
         data: activities,
       })
     } catch (error) {
+      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -29,7 +30,7 @@ export default class ActivitiesController {
     }
   }
 
-  async show({ params, response }: HttpContext) {
+  async show({ params, response, logger }: HttpContext) {
     try {
       const slug: number = params.slug
       const activityData = await Activity.findByOrFail('slug', slug)
@@ -39,6 +40,7 @@ export default class ActivitiesController {
         data: activityData,
       })
     } catch (error) {
+      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -46,7 +48,7 @@ export default class ActivitiesController {
     }
   }
 
-  async register({ params, request, response, auth }: HttpContext) {
+  async register({ params, request, response, auth, logger }: HttpContext) {
     try {
       const activityId: number = params.id
       const user = auth.getUserOrFail()
@@ -64,10 +66,16 @@ export default class ActivitiesController {
         data: registration,
       })
     } catch (error) {
+      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
       })
     }
+  }
+
+  logError(status: string, message: string): string {
+    const errorData = 'status: ' + status + '// ' + 'message' + message
+    return errorData
   }
 }
