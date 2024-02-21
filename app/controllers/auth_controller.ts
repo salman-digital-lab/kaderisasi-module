@@ -7,8 +7,8 @@ import Profile from '#models/profile'
 
 export default class AuthController {
   async register({ request, response, logger }: HttpContext) {
+    const payload = await registerValidator.validate(request.all())
     try {
-      const payload = await registerValidator.validate(request.all())
       const exist = await PublicUser.findBy('email', payload.email)
 
       if (exist) {
@@ -44,8 +44,8 @@ export default class AuthController {
   }
 
   async login({ request, response, logger }: HttpContext) {
+    const payload = await loginValidator.validate(request.all())
     try {
-      const payload = await loginValidator.validate(request.all())
       const email: string = payload.email
       const password: string = payload.password
       const user = await PublicUser.query().where('email', email).firstOrFail()
