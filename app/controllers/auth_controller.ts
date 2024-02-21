@@ -97,7 +97,7 @@ export default class AuthController {
   }
 
   logError(status: string, message: string): string {
-    const errorData = 'status: ' + status + '// ' + 'message' + message
+    const errorData = 'status: ' + JSON.stringify(status) + '// ' + 'message: ' + JSON.stringify(message)
     return errorData
   }
 }
