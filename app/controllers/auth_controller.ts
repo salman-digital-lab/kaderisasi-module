@@ -6,7 +6,7 @@ import PublicUser from '#models/public_user'
 import Profile from '#models/profile'
 
 export default class AuthController {
-  async register({ request, response, logger }: HttpContext) {
+  async register({ request, response }: HttpContext) {
     const payload = await registerValidator.validate(request.all())
     try {
       const exist = await PublicUser.findBy('email', payload.email)
@@ -35,7 +35,6 @@ export default class AuthController {
         })
       })
     } catch (error) {
-      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -43,7 +42,7 @@ export default class AuthController {
     }
   }
 
-  async login({ request, response, logger }: HttpContext) {
+  async login({ request, response }: HttpContext) {
     const payload = await loginValidator.validate(request.all())
     try {
       const email: string = payload.email
@@ -64,7 +63,6 @@ export default class AuthController {
         data: { user, data, token },
       })
     } catch (error) {
-      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -72,7 +70,7 @@ export default class AuthController {
     }
   }
 
-  async sendPasswordRecovery({ request, response, logger }: HttpContext) {
+  async sendPasswordRecovery({ request, response }: HttpContext) {
     try {
       const email: string = request.all().email
       const user = await PublicUser.findBy('email', email)
@@ -88,16 +86,10 @@ export default class AuthController {
         message: 'SEND_EMAIL_SUCCESS',
       })
     } catch (error) {
-      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
       })
     }
-  }
-
-  logError(status: string, message: string): string {
-    const errorData = 'status: ' + JSON.stringify(status) + '// ' + 'message: ' + JSON.stringify(message)
-    return errorData
   }
 }

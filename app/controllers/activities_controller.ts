@@ -4,7 +4,7 @@ import { activityRegistrationValidator } from '#validators/activity_validator'
 import ActivityRegistration from '#models/activity_registration'
 
 export default class ActivitiesController {
-  async index({ request, response, logger }: HttpContext) {
+  async index({ request, response }: HttpContext) {
     try {
       const page = request.qs().page ?? 1
       const perPage = request.qs().per_page ?? 10
@@ -13,16 +13,20 @@ export default class ActivitiesController {
       const activities = await Activity.query()
         .select('*')
         .where('name', 'ILIKE', search ? '%' + search + '%' : '%%')
-        .where('activity_type', 'ILIKE', search ? '%' + search + '%' : '%%')
+        .where('is_published', 1)
         .orderBy('id', 'desc')
         .paginate(page, perPage)
+
+      activities.map((item) => {
+        item.additionalConfig = JSON.parse(item.additionalConfig)
+        item.additionalQuestionnaire = JSON.parse(item.additionalQuestionnaire)
+      })
 
       return response.ok({
         messages: 'GET_DATA_SUCCESS',
         data: activities,
       })
     } catch (error) {
-      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -30,17 +34,19 @@ export default class ActivitiesController {
     }
   }
 
-  async show({ params, response, logger }: HttpContext) {
+  async show({ params, response }: HttpContext) {
     try {
       const slug: number = params.slug
-      const activityData = await Activity.findByOrFail('slug', slug)
+      var activityData = await Activity.query().where({ is_published: 1, slug: slug }).firstOrFail()
+
+      activityData.additionalConfig = JSON.parse(activityData.additionalConfig)
+      activityData.additionalQuestionnaire = JSON.parse(activityData.additionalQuestionnaire)
 
       return response.ok({
         message: 'GET_DATA_SUCCESS',
         data: activityData,
       })
     } catch (error) {
-      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -48,7 +54,7 @@ export default class ActivitiesController {
     }
   }
 
-  async register({ params, request, response, auth, logger }: HttpContext) {
+  async register({ params, request, response, auth }: HttpContext) {
     try {
       const activityId: number = params.id
       const user = auth.getUserOrFail()
@@ -66,16 +72,10 @@ export default class ActivitiesController {
         data: registration,
       })
     } catch (error) {
-      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
       })
     }
-  }
-
-  logError(status: string, message: string): string {
-    const errorData = 'status: ' + status + '// ' + 'message' + message
-    return errorData
   }
 }

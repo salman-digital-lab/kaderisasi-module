@@ -5,7 +5,7 @@ import ActivityRegistration from '#models/activity_registration'
 import { updateProfileValidator } from '#validators/profile_validator'
 
 export default class ProfilesController {
-  async show({ response, auth, logger }: HttpContext) {
+  async show({ response, auth }: HttpContext) {
     try {
       const user = auth.getUserOrFail()
       const id = user.id
@@ -23,7 +23,6 @@ export default class ProfilesController {
         data: { userData, profile },
       })
     } catch (error) {
-      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -31,7 +30,7 @@ export default class ProfilesController {
     }
   }
 
-  async update({ request, response, auth, logger }: HttpContext) {
+  async update({ request, response, auth }: HttpContext) {
     const payload = await updateProfileValidator.validate(request.all())
     try {
       const id = auth.user?.id
@@ -43,7 +42,6 @@ export default class ProfilesController {
         data: updated,
       })
     } catch (error) {
-      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.message,
@@ -51,7 +49,7 @@ export default class ProfilesController {
     }
   }
 
-  async activities({ response, auth, logger }: HttpContext) {
+  async activities({ response, auth }: HttpContext) {
     try {
       const user = auth.getUserOrFail()
       const id = user.id
@@ -66,16 +64,10 @@ export default class ProfilesController {
         data: activities,
       })
     } catch (error) {
-      logger.error(this.logError(error.status, error.message))
       return response.internalServerError({
         message: 'GENERAL_ERROR',
         error: error.stack,
       })
     }
-  }
-
-  logError(status: string, message: string): string {
-    const errorData = 'status: ' + status + '// ' + 'message' + message
-    return errorData
   }
 }
