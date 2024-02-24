@@ -17,6 +17,7 @@ export default class ProfilesController {
         .preload('university')
         .preload('province')
         .preload('city')
+        .firstOrFail()
 
       return response.ok({
         message: 'GET_DATA_SUCCESS',
