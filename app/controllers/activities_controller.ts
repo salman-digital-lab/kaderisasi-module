@@ -2,6 +2,7 @@ import { HttpContext } from '@adonisjs/core/http'
 import Activity from '#models/activity'
 import { activityRegistrationValidator } from '#validators/activity_validator'
 import ActivityRegistration from '#models/activity_registration'
+import Profile from '#models/profile'
 
 export default class ActivitiesController {
   async index({ request, response }: HttpContext) {
@@ -55,11 +56,18 @@ export default class ActivitiesController {
   }
 
   async register({ params, request, response, auth }: HttpContext) {
+    const data = await activityRegistrationValidator.validate(request.all())
+    const user = auth.getUserOrFail()
     try {
       const activityId: number = params.id
-      const user = auth.getUserOrFail()
-      const data = await activityRegistrationValidator.validate(request.all())
+      const userData = await Profile.findOrFail(user.id)
+      const activity = await Activity.findOrFail(activityId)
 
+      if (userData.level < activity.minimumLevel) {
+        return response.forbidden({
+          message: 'UNMATCHED_LEVEL',
+        })
+      }
       const registration = await ActivityRegistration.create({
         userId: user.id,
         activityId: activityId,
