@@ -30,7 +30,7 @@ router
 
     router
       .group(() => {
-        router.post('register/:id', [ActivitiesController, 'register']).use(
+        router.post(':slug/register/', [ActivitiesController, 'register']).use(
           middleware.auth({
             guards: ['api'],
           })

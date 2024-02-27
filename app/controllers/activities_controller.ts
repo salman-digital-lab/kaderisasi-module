@@ -70,9 +70,9 @@ export default class ActivitiesController {
     const data = await activityRegistrationValidator.validate(request.all())
     const user = auth.getUserOrFail()
     try {
-      const activityId: number = params.id
+      const activitySlug: number = params.slug
       const userData = await Profile.findOrFail(user.id)
-      const activity = await Activity.findOrFail(activityId)
+      const activity = await Activity.findByOrFail('slug', activitySlug)
 
       if (userData.level < activity.minimumLevel) {
         return response.forbidden({
@@ -81,7 +81,7 @@ export default class ActivitiesController {
       }
       const registration = await ActivityRegistration.create({
         userId: user.id,
-        activityId: activityId,
+        activityId: activity.id,
         status: data.status,
         questionnaireAnswer: data.questionnaire_answer,
       })
