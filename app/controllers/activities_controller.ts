@@ -82,7 +82,7 @@ export default class ActivitiesController {
       const registration = await ActivityRegistration.create({
         userId: user.id,
         activityId: activity.id,
-        status: data.status,
+        status: 'REGISTERED',
         questionnaireAnswer: data.questionnaire_answer,
       })
 
