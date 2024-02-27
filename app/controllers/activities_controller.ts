@@ -11,8 +11,19 @@ export default class ActivitiesController {
       const perPage = request.qs().per_page ?? 10
       const search = request.qs().search
 
+      type Clause = {
+        activity_category: number
+      }
+
+      const clause = <Clause>{}
+
+      if (request.qs().category) {
+        clause.activity_category = request.qs().category
+      }
+
       const activities = await Activity.query()
         .select('*')
+        .where(clause)
         .where('name', 'ILIKE', search ? '%' + search + '%' : '%%')
         .where('is_published', 1)
         .orderBy('id', 'desc')
