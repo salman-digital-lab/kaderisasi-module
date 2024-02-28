@@ -36,7 +36,7 @@ export default class PublicUser extends compose(BaseModel, AuthFinder) {
   currentAccessToken?: AccessToken
 
   static authTokens = DbAccessTokensProvider.forModel(PublicUser, {
-    expiresIn: '30 days',
+    expiresIn: '7 days',
     prefix: 'oat_',
     table: 'public_auth_access_tokens',
     type: 'auth_token',

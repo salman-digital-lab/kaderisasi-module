@@ -11,11 +11,7 @@ export default class ActivitiesController {
       const perPage = request.qs().per_page ?? 10
       const search = request.qs().search
 
-      type Clause = {
-        activity_category: number
-      }
-
-      const clause = <Clause>{}
+      const clause: { activity_category?: number } = {}
 
       if (request.qs().category) {
         clause.activity_category = request.qs().category
