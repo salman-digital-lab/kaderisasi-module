@@ -21,6 +21,7 @@ router
         router.put('', [ProfilesController, 'update'])
         router.get('', [ProfilesController, 'show'])
         router.get('activities', [ProfilesController, 'activities'])
+        router.get('activities/:slug', [ActivitiesController, 'registrationCheck'])
       })
       .prefix('profiles')
       .use(
@@ -36,9 +37,6 @@ router
             guards: ['api'],
           })
         )
-        router
-          .get(':slug/status', [ActivitiesController, 'registrationCheck'])
-          .use(middleware.auth({ guards: ['api'] }))
         router.get('/:slug', [ActivitiesController, 'show'])
         router.get('', [ActivitiesController, 'index'])
       })
