@@ -58,6 +58,7 @@
     "@adonisjs/session": "^7.1.1",
     "@vinejs/vine": "^1.7.1",
     "better-sqlite3": "^9.3.0",
+    "edge.js": "^6.0.1",
     "luxon": "^3.4.4",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1"

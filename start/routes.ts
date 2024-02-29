@@ -13,6 +13,7 @@ router
         router.post('register', [AuthController, 'register'])
         router.post('login', [AuthController, 'login'])
         router.post('forgot-password', [AuthController, 'sendPasswordRecovery'])
+        router.put('reset-password', [AuthController, 'resetPassword'])
       })
       .prefix('auth')
 
