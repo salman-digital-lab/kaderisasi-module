@@ -4,6 +4,7 @@ import database from '@adonisjs/lucid/services/db'
 import hash from '@adonisjs/core/services/hash'
 import PublicUser from '#models/public_user'
 import Profile from '#models/profile'
+import mail from '@adonisjs/mail/services/main'
 
 export default class AuthController {
   async register({ request, response }: HttpContext) {
@@ -47,7 +48,13 @@ export default class AuthController {
     try {
       const email: string = payload.email
       const password: string = payload.password
-      const user = await PublicUser.query().where('email', email).firstOrFail()
+      const user = await PublicUser.query().where('email', email).first()
+
+      if (!user) {
+        return response.notFound({
+          message: 'USER_NOT_FOUND',
+        })
+      }
 
       if (!(await hash.verify(user.password, password))) {
         return response.unauthorized({
@@ -81,7 +88,14 @@ export default class AuthController {
         })
       }
 
-      // need to install & implement adonis mail here
+      await mail.send((message) => {
+        message
+          .to(user.email)
+          .from('info@example.org')
+          .subject('Password Recovery')
+          .htmlView('emails/verify_email', {})
+      })
+
       return response.ok({
         message: 'SEND_EMAIL_SUCCESS',
       })

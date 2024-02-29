@@ -4,6 +4,7 @@ import { middleware } from '#start/kernel'
 const AuthController = () => import('#controllers/auth_controller')
 const ProfilesController = () => import('#controllers/profiles_controller')
 const ActivitiesController = () => import('#controllers/activities_controller')
+const RuangCurhatsController = () => import('#controllers/ruang_curhats_controller')
 
 router
   .group(() => {
@@ -35,9 +36,24 @@ router
             guards: ['api'],
           })
         )
+        router
+          .get(':slug/status', [ActivitiesController, 'registrationCheck'])
+          .use(middleware.auth({ guards: ['api'] }))
         router.get('/:slug', [ActivitiesController, 'show'])
         router.get('', [ActivitiesController, 'index'])
       })
       .prefix('activities')
+
+    router
+      .group(() => {
+        router.post('', [RuangCurhatsController, 'store'])
+        router.get('', [RuangCurhatsController, 'history'])
+      })
+      .prefix('ruang-curhat')
+      .use(
+        middleware.auth({
+          guards: ['api'],
+        })
+      )
   })
   .prefix('v2')

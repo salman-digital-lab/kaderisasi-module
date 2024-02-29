@@ -62,6 +62,35 @@ export default class ActivitiesController {
     }
   }
 
+  async registrationCheck({ auth, params, response }: HttpContext) {
+    const id = auth.user?.id
+    const slug: string = params.slug
+    try {
+      const activity = await Activity.findByOrFail('slug', slug)
+      const registration: { status: string } = { status: 'UNREGISTERED' }
+      const isRegistered = await ActivityRegistration.query()
+        .where({
+          user_id: id,
+          activity_id: activity.id,
+        })
+        .first()
+
+      if (isRegistered) {
+        registration.status = isRegistered.status
+      }
+
+      return response.ok({
+        message: 'GET_DATA_SUCCESS',
+        data: registration,
+      })
+    } catch (error) {
+      return response.internalServerError({
+        message: 'GENERAL_ERROR',
+        error: error.message,
+      })
+    }
+  }
+
   async register({ params, request, response, auth }: HttpContext) {
     const data = await activityRegistrationValidator.validate(request.all())
     const user = auth.getUserOrFail()

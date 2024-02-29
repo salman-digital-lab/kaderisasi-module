@@ -1,8 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import RuangCurhat from '#models/ruang_curhat'
 import { storeRuangCurhatValidator } from '#validators/ruang_curhat_validator'
-import AdminUser from '#models/admin_user'
-import mail from '@adonisjs/mail/services/main'
 
 export default class RuangCurhatsController {
   async store({ auth, request, response }: HttpContext) {
@@ -15,16 +13,26 @@ export default class RuangCurhatsController {
       }
 
       const ruangCurhat = await RuangCurhat.create({ ...payload, ...insert })
-      await mail.send((message) => {
-        message
-          .to('example@mail.com')
-          .from('info@example.org')
-          .subject('Pengajuan Ruang Curhat')
-          .htmlView('emails/verify_email', { ruangCurhat })
-      })
 
       return response.ok({
         messages: 'CREATE_DATA_SUCCESS',
+        data: ruangCurhat,
+      })
+    } catch (error) {
+      return response.internalServerError({
+        message: 'GENERAL_ERROR',
+        error: error.message,
+      })
+    }
+  }
+
+  async history({ auth, response }: HttpContext) {
+    const id = auth.user?.id
+    try {
+      const histories = await RuangCurhat.query().where({ user_id: id }).preload('adminUser')
+      return response.ok({
+        messages: 'GET_DATA_SUCCESS',
+        data: histories,
       })
     } catch (error) {
       return response.internalServerError({
