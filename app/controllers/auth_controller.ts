@@ -96,11 +96,12 @@ export default class AuthController {
 
       const encrypted = encryption.encrypt(email, '30 minutes')
       const resetUrl: string = env.get('RESET_PASSWORD_URL') + '?token=' + encrypted
+      const fromAddress: string = env.get('MAIL_FROM')
 
       await mail.send((message) => {
         message
           .to(user.email)
-          .from('datcen@salmanitb.com')
+          .from(fromAddress, 'Kaderisasi Masjid Salman ITB')
           .subject('Reset kata sandi akun Kaderisasi Masjid Salman ITB')
           .htmlView('emails/reset_password', { resetUrl })
       })
