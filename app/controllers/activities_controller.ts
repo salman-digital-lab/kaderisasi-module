@@ -108,7 +108,7 @@ export default class ActivitiesController {
         userId: user.id,
         activityId: activity.id,
         status: 'REGISTERED',
-        questionnaireAnswer: data.questionnaire_answer,
+        questionnaireAnswer: JSON.stringify(data.questionnaire_answer),
       })
 
       return response.ok({

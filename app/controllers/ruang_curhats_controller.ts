@@ -13,7 +13,6 @@ export default class RuangCurhatsController {
       }
 
       const ruangCurhat = await RuangCurhat.create({ ...payload, ...insert })
-
       return response.ok({
         messages: 'CREATE_DATA_SUCCESS',
         data: ruangCurhat,
