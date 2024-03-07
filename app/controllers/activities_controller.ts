@@ -67,7 +67,7 @@ export default class ActivitiesController {
     const slug: string = params.slug
     try {
       const activity = await Activity.findByOrFail('slug', slug)
-      const registration: { status: string } = { status: 'UNREGISTERED' }
+      const registration: { status: string } = { status: 'BELUM TERDAFTAR' }
       const isRegistered = await ActivityRegistration.query()
         .where({
           user_id: id,
@@ -98,6 +98,16 @@ export default class ActivitiesController {
       const activitySlug: number = params.slug
       const userData = await Profile.findOrFail(user.id)
       const activity = await Activity.findByOrFail('slug', activitySlug)
+      const registered = await ActivityRegistration.query().where({
+        user_id: user.id,
+        activity_id: activity.id,
+      })
+
+      if (registered) {
+        return response.conflict({
+          message: 'ALREADY_REGISTERED',
+        })
+      }
 
       if (userData.level < activity.minimumLevel) {
         return response.forbidden({
@@ -107,7 +117,7 @@ export default class ActivitiesController {
       const registration = await ActivityRegistration.create({
         userId: user.id,
         activityId: activity.id,
-        status: 'REGISTERED',
+        status: 'TERDAFTAR',
         questionnaireAnswer: JSON.stringify(data.questionnaire_answer),
       })
 
