@@ -25,11 +25,6 @@ export default class ActivitiesController {
         .orderBy('id', 'desc')
         .paginate(page, perPage)
 
-      activities.map((item) => {
-        item.additionalConfig = JSON.parse(item.additionalConfig)
-        item.additionalQuestionnaire = JSON.parse(item.additionalQuestionnaire)
-      })
-
       return response.ok({
         messages: 'GET_DATA_SUCCESS',
         data: activities,
@@ -46,9 +41,6 @@ export default class ActivitiesController {
     try {
       const slug: number = params.slug
       var activityData = await Activity.query().where({ is_published: 1, slug: slug }).firstOrFail()
-
-      activityData.additionalConfig = JSON.parse(activityData.additionalConfig)
-      activityData.additionalQuestionnaire = JSON.parse(activityData.additionalQuestionnaire)
 
       return response.ok({
         message: 'GET_DATA_SUCCESS',
