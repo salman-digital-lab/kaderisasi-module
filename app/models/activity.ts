@@ -36,7 +36,7 @@ export default class Activity extends BaseModel {
   declare minimumLevel: number
 
   @column()
-  declare activityType: string
+  declare activityType: number
 
   @column()
   declare activityCategory: number
