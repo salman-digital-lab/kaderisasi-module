@@ -50,23 +50,24 @@ RUN node ace build
 # In this final stage, we will start running the application
 FROM base AS production
 
+ENV APP_KEY=key_default
+ENV NODE_ENV=production
+ENV DB_USER=test
+ENV DB_PASSWORD=test
+ENV DB_DATABASE=kaderisasi_development
+ENV SMTP_USERNAME=test@salmanitb.com
+ENV SMTP_PASSWORD=test
+ENV DB_HOST=test
+
 ENV TZ=Asia/Jakarta
 ENV PORT=3334
 ENV HOST=127.0.0.1
 ENV LOG_LEVEL=info
-ENV APP_KEY=y5Fs4gJ4MbkVB7p-Fcz2JD6Pm_Cofr3a
-ENV NODE_ENV=production
-ENV DB_HOST=103.30.195.162
 ENV DB_PORT=5432
-ENV DB_USER=wadmin
-ENV DB_PASSWORD=8bJBMg7T2IfP
-ENV DB_DATABASE=kaderisasi_development
-ENV REDIRECT_URL=www.google.com
-ENV SESSION_DRIVER=cookie
 ENV SMTP_HOST=smtp.gmail.com
 ENV SMTP_PORT=465
-ENV SMTP_USERNAME=digilab@salmanitb.com
-ENV SMTP_PASSWORD=uiwhzihkupqjfsqi
+ENV REDIRECT_URL=www.google.com
+ENV SESSION_DRIVER=cookie
 ENV RESET_PASSWORD_URL=kaderisasi.salmanitb.com/reset-password
 ENV MAIL_FROM=digilab@salmanitb.com
 
