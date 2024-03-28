@@ -72,7 +72,7 @@
   },
   "prettier": "@adonisjs/prettier-config",
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
+    "**/*.{js,jsx,ts,tsx}": [
       "eslint --max-warnings 0 --fix"
     ]
   }
