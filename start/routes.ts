@@ -6,6 +6,10 @@ const ProfilesController = () => import('#controllers/profiles_controller')
 const ActivitiesController = () => import('#controllers/activities_controller')
 const RuangCurhatsController = () => import('#controllers/ruang_curhats_controller')
 
+router.get('/', () => {
+  return 'Hello world from the home page.'
+})
+
 router
   .group(() => {
     router
