@@ -60,7 +60,7 @@ ENV SMTP_PASSWORD=test
 ENV DB_HOST=test
 
 ENV TZ=Asia/Jakarta
-ENV PORT=3334
+ENV PORT=3333
 ENV HOST=0.0.0.0
 ENV LOG_LEVEL=info
 ENV DB_PORT=5432
@@ -78,7 +78,7 @@ COPY --chown=node:node --from=build /home/node/app/build .
 RUN npm ci --omit="dev" --ignore-scripts
 
 # Expose port
-EXPOSE 3334
+EXPOSE 3333
 
 # Run the command to start the server using "dumb-init"
 CMD [ "dumb-init", "node", "./bin/server.js" ]
