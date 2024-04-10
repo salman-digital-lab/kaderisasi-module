@@ -142,4 +142,19 @@ export default class AuthController {
       })
     }
   }
+
+  async logout({ auth, response }: HttpContext) {
+    const user = auth.getUserOrFail()
+    try {
+      await PublicUser.authTokens.delete(user, user.currentAccessToken.identifier)
+      return response.ok({
+        message: 'LOGOUT_SUCCESS',
+      })
+    } catch (error) {
+      return response.internalServerError({
+        message: 'GENERAL_ERROR',
+        error: error.message,
+      })
+    }
+  }
 }

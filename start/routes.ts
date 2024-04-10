@@ -18,6 +18,7 @@ router
         router.post('login', [AuthController, 'login'])
         router.post('forgot-password', [AuthController, 'sendPasswordRecovery'])
         router.put('reset-password', [AuthController, 'resetPassword'])
+        router.put('logout', [AuthController, 'logout']).use(middleware.auth({ guards: ['api'] }))
       })
       .prefix('auth')
 
