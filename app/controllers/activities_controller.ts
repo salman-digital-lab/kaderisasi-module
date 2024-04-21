@@ -95,7 +95,7 @@ export default class ActivitiesController {
         activity_id: activity.id,
       })
 
-      if (registered) {
+      if (registered && registered.length) {
         return response.conflict({
           message: 'ALREADY_REGISTERED',
         })
