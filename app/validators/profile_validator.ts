@@ -15,5 +15,6 @@ export const updateProfileValidator = vine.compile(
     linkedin: vine.string().optional(),
     personal_id: vine.string().optional(),
     tiktok: vine.string().optional(),
+    university_temp: vine.string().optional(),
   })
 )

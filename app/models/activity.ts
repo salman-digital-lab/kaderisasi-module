@@ -10,6 +10,7 @@ type AdditionalConfig = {
   custom_selection_status: string[]
   mandatory_profile_data: PersonalQuestionnaire[]
   additional_questionnaire: Questionnaire[]
+  images: string[]
 }
 
 type Questionnaire =
@@ -71,9 +72,6 @@ export default class Activity extends BaseModel {
 
   @column()
   declare additionalConfig: AdditionalConfig
-
-  @column()
-  declare images: string
 
   @column()
   declare isPublished: boolean
