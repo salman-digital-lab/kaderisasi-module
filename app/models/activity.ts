@@ -1,6 +1,34 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 
+type PersonalQuestionnaire = {
+  name: string
+  required: boolean
+}
+
+type AdditionalConfig = {
+  custom_selection_status: string[]
+  mandatory_profile_data: PersonalQuestionnaire[]
+  additional_questionnaire: Questionnaire[]
+}
+
+type Questionnaire =
+  | {
+      id?: number
+      type: 'text' | 'number' | 'textarea'
+      label: string
+      name: string
+      required: boolean
+    }
+  | {
+      id?: number
+      type: 'dropdown'
+      label: string
+      name: string
+      required: boolean
+      data: { label: string; value: string; id: number }[]
+    }
+
 export default class Activity extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
@@ -42,10 +70,10 @@ export default class Activity extends BaseModel {
   declare activityCategory: number
 
   @column()
-  declare additionalQuestionnaire: string
+  declare additionalConfig: AdditionalConfig
 
   @column()
-  declare additionalConfig: string
+  declare images: string
 
   @column()
   declare isPublished: boolean

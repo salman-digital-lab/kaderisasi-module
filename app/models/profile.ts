@@ -67,6 +67,9 @@ export default class Profile extends BaseModel {
   declare university: BelongsTo<typeof University>
 
   @column()
+  declare university_temp: string
+
+  @column()
   declare major: string
 
   @column()
