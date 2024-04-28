@@ -43,6 +43,12 @@ router
             guards: ['api'],
           })
         )
+
+        router.put(':slug/registration', [ActivitiesController, 'questionnaireEdit']).use(
+          middleware.auth({
+            guards: ['api'],
+          })
+        )
         router.get('/:slug', [ActivitiesController, 'show'])
         router.get('', [ActivitiesController, 'index'])
       })

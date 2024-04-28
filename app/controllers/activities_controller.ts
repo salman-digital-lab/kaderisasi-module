@@ -124,4 +124,44 @@ export default class ActivitiesController {
       })
     }
   }
+
+  async questionnaireEdit({ auth, params, request, response }: HttpContext) {
+    const data = await activityRegistrationValidator.validate(request.all())
+    const user = auth.getUserOrFail()
+    try {
+      const activitySlug: number = params.slug
+      const activity = await Activity.findBy('slug', activitySlug)
+      if (!activity) {
+        return response.notFound({
+          message: 'ACTIVITY_NOT_FOUND',
+        })
+      }
+      const registered = await ActivityRegistration.query()
+        .where({
+          user_id: user.id,
+          activity_id: activity.id,
+        })
+        .first()
+
+      if (!registered) {
+        return response.notFound({
+          message: 'REGISTRATION_NOT_FOUND',
+        })
+      }
+
+      const updated = await registered
+        .merge({ questionnaireAnswer: data.questionnaire_answer })
+        .save()
+
+      return response.ok({
+        message: 'UPDATE_DATA_SUCCESS',
+        data: updated,
+      })
+    } catch (error) {
+      return response.internalServerError({
+        message: 'GENERAL_ERROR',
+        error: error.message,
+      })
+    }
+  }
 }
