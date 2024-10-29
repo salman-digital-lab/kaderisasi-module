@@ -45,6 +45,9 @@ export default class RuangCurhat extends BaseModel {
   @column()
   declare status: number
 
+  @column()
+  declare additionalNotes: string
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

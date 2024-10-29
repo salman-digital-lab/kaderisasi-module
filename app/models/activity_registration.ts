@@ -28,7 +28,7 @@ export default class ActivityRegistration extends BaseModel {
   declare status: string
 
   @column()
-  declare questionnaireAnswer: any
+  declare questionnaireAnswer: Record<string, any>
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
